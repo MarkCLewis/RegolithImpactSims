@@ -12,8 +12,8 @@
 #include "CollisionFinders.h"
 #include "System.h"
 #include "GCPopulation.h"
-//#include "TreeCollisionForcing.h"
-#include "CollisionForcing.h"
+#include "TreeCollisionForcing.h"
+//#include "CollisionForcing.h"
 //#include "BoundaryConditions.h"
 //#include "VariableGridCollisionHash.h"
 #include "FixedGridCollisionHash.h"
@@ -73,16 +73,16 @@ int main(int argc,char **argv) {
 //	Boundary bc(minx,maxx,miny,pc,collForce);
 
 /***** Forcing Setup ********/
-	typedef FixedGridCollisionHash Hash;
+//	typedef FixedGridCollisionHash Hash;
 //	typedef VariableGridCollisionHash Hash;
-	typedef CollisionForcing<Hash> CollForcing;
-//	typedef TreeCollisionForcing<GravCollTree<Boundary> > CollForcing;
+//	typedef CollisionForcing<Hash> CollForcing;
+	typedef TreeCollisionForcing<GravCollTree<Boundary> > CollForcing;
 	typedef DoubleForce<GravCollTree<Boundary>,CollForcing> Forcing;
 //	typedef DoubleForce<KDGravTree,Forcing1> Forcing;
 //	typedef DoubleForce<ParticleMoonForcing,CollForcing> Forcing;
 
 	GravCollTree<Boundary> gt(0.3,bc);
-	CollForcing collForce;
+	CollForcing collForce(gt);
 //	Forcing force;
 //	MoonForcing moon(moonMass,moonE,moonPhi);
 //	Forcing1 force1(moon,collForce);
