@@ -42,8 +42,8 @@ int main(int argc,char **argv) {
 
 	double moonOrbitRadius=140000;
 	double q=2.8;
-	double minRadius=1e-10;
-	double maxRadius=1e-9;
+	double minRadius=3e-11;
+	double maxRadius=3e-10;
 //	double tau=0.42;
 	double eValue=2e-10;
 	double iValue=3e-8;

@@ -1,4 +1,9 @@
+# These are related to doing the simulations
 *.bin
+*.png
+*.avi
+log
+RingsSim
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++
