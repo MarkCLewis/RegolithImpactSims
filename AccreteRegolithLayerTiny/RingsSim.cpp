@@ -40,7 +40,7 @@ int main(int argc,char **argv) {
 //	double minx=0.00012,maxx=0.00022,miny=-0.02,maxy=0.0022;
 	double minx=-0.0000001,maxx=0.0000001,miny=-0.0000001,maxy=0.0000001;
 
-	double moonOrbitRadius=140000;
+	double moonOrbitRadius=130000;
 	double q=2.8;
 	double minRadius=3e-11;
 	double maxRadius=3e-10;
@@ -50,7 +50,7 @@ int main(int argc,char **argv) {
 	int outputInterval=20;
 	int stepMultiple=1;
 	double timeStep=6.28e-3*stepMultiple;
-	double particleDensitygPercm3=0.6;
+	double particleDensitygPercm3=0.5;
 	double tau=0.5;
 	int step=0;
 
@@ -113,7 +113,7 @@ int main(int argc,char **argv) {
 
 
 /***** Population Setup ********/
-	typedef GCPopulation<Boundary,FullLinearFinder<GCCoords>,Output,GCCoords, En_0p5_Et_0p5> Pop;
+	typedef GCPopulation<Boundary,FullLinearFinder<GCCoords>,Output,GCCoords> Pop;
 	StandardMass massFunc(moonOrbitRadius,particleDensitygPercm3);
 	Pop pop(bc,output,timeStep,moonOrbitRadius,massFunc);
 

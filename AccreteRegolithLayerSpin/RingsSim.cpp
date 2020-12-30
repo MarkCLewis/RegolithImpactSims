@@ -8,7 +8,8 @@
 #define GRAVITY
 #define AZIMUTHAL_MIRRORS 3
 #define FULL_MIRRORS 3
-//#define DEBUG
+#define DEBUG
+#define SPIN
 
 #include "CollisionFinders.h"
 #include "System.h"
@@ -55,7 +56,7 @@ int main(int argc,char **argv) {
 	double tau=0.5;
 	int step=0;
 
-	omp_set_num_threads(24);
+	omp_set_num_threads(1);
 	
 
 /***** Boundary Setup ********/

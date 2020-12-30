@@ -8,7 +8,6 @@
 #define GRAVITY
 #define AZIMUTHAL_MIRRORS 3
 #define FULL_MIRRORS 3
-//#define DEBUG
 
 #include "CollisionFinders.h"
 #include "System.h"
@@ -39,23 +38,23 @@ int main(int argc,char **argv) {
 //	double minx=0.0060,maxx=0.0068,miny=0.04,maxy=0.1022;
 //	double minx=0.0066,maxx=0.0068,miny=0.04,maxy=0.0402;
 //	double minx=0.00012,maxx=0.00022,miny=-0.02,maxy=0.0022;
-	double minx=-0.0000001,maxx=0.0000001,miny=-0.0000001,maxy=0.0000001;
+	double minx=-0.00001,maxx=0.00001,miny=-0.00001,maxy=0.00001;
 
-	double moonOrbitRadius=130000;
+	double moonOrbitRadius=140000;
 	double q=2.8;
-	double minRadius=1e-10;
-	double maxRadius=1e-9;
+	double minRadius=3e-11;
+	double maxRadius=3e-10;
 //	double tau=0.42;
 	double eValue=2e-10;
 	double iValue=3e-8;
-	int outputInterval=20;
+	int outputInterval=1;
 	int stepMultiple=1;
 	double timeStep=6.28e-3*stepMultiple;
-	double particleDensitygPercm3=0.5;
+	double particleDensitygPercm3=0.6;
 	double tau=0.5;
 	int step=0;
 
-	omp_set_num_threads(24);
+//	omp_set_num_threads(4);
 	
 
 /***** Boundary Setup ********/
@@ -114,7 +113,7 @@ int main(int argc,char **argv) {
 
 
 /***** Population Setup ********/
-	typedef GCPopulation<Boundary,FullLinearFinder<GCCoords>,Output,GCCoords> Pop;
+	typedef GCPopulation<Boundary,FullLinearFinder<GCCoords>,Output,GCCoords, En_0p5_Et_0p5> Pop;
 	StandardMass massFunc(moonOrbitRadius,particleDensitygPercm3);
 	Pop pop(bc,output,timeStep,moonOrbitRadius,massFunc);
 
@@ -127,19 +126,23 @@ int main(int argc,char **argv) {
 //	rd.setBin(1,rad2,frac2);
 //	RandomSquareEIOrbits distrib(numBodies,bc.getMinX(),bc.getMaxX(),bc.getMinY(),bc.getMaxY(),eValue,iValue,rd);
 //	RandomSquareEIOrbitsWithCheck<Boundary> distrib(numBodies,bc.getMinX(),bc.getMaxX(),bc.getMinY(),bc.getMaxY(),eValue,iValue,rd,bc);
-	TauRandomSquareEIOrbitsWithCheck<Boundary, GCCoords> distrib(tau,bc.getMinX(),bc.getMaxX(),bc.getMinY(),bc.getMaxY(),eValue,iValue,rd,bc);
+	// TauRandomSquareEIOrbitsWithCheck<Boundary, GCCoords> distrib(tau,bc.getMinX(),bc.getMaxX(),bc.getMinY(),bc.getMaxY(),eValue,iValue,rd,bc);
 //	SigmaRandomSquareEIOrbitsWithCheck<Boundary,GCCoords> distrib(sigma,particleDensitygPercm3,moonOrbitRadius,bc.getMinX(),bc.getMaxX(),bc.getMinY(),bc.getMaxY(),eValue,iValue,rd,bc);
 //	TauRandomGaussianEIOrbitsWithCheck<Boundary> distrib(tau,bc.getMinX(),bc.getMaxX(),bc.getMinY(),bc.getMaxY(),eValue,iValue,rd,bc);
-//	FileRecoverAll distrib(step);
+	FileRecoverAll distrib(step);
 	pop.randomDistribution(distrib);
+	for (int i = 0; i<pop.getNumBodies(); i++){
+		ParticleIndex pi={i};
+		printf("%d %e %e %e %e %e %e\n", i, pop.getx(pi), pop.gety(pi), pop.getz(pi), pop.getvx(pi), pop.getvy(pi), pop.getvz(pi));
+	}
 	
-	pop.addSingleParticleGCandClear((bc.getMaxX()+bc.getMinX())*0.5,(bc.getMaxY()+bc.getMinY())*0.5,0.0,0.0,0.0,0.0,1e-8);
+//	pop.addSingleParticleGCandClear((bc.getMaxX()+bc.getMinX())*0.5,(bc.getMaxY()+bc.getMinY())*0.5,0.0,0.0,0.0,0.0,1e-8);
 
 /***** Do Simulation ********/
 	System<Pop,Forcing> sys(pop,force);
 
 	printf("Start Simulation with %d particles.\n",pop.getNumBodies());
-	for(int i=0; i<20000/stepMultiple+1; ++i) {
+	for(int i=0; i<5000/stepMultiple+1; ++i) {
 		step=i;
 		printf("Step %d\n",i);
 		sys.advance();
